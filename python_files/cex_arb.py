@@ -48,7 +48,7 @@ def side_to_uint(side: Side) -> int:
 
 class AutoTrader:
     def __init__(self, wallet: LocalAccount, api_url: str, coin: str):
-        self.info = Info(api_url)
+        self.info = Info(api_url, skip_ws=True)
         self.exchange = Exchange(wallet, api_url)
         self.exchange.update_leverage(50, coin)
         self.coin = coin
