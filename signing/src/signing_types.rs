@@ -35,6 +35,13 @@ pub struct OrderType {
     pub limit: LimitOrderType,
     pub trigger: TriggerOrderType,
 }
+// TODO: might want to replace ordertype with an enum, so match statement can be used
+#[derive(Debug)]
+pub enum OrderType {
+    Limit,
+    Trigger
+}
+
 
 #[derive(Debug)]
 pub struct OrderTypeWire {
@@ -58,3 +65,34 @@ pub struct CancelRequest {
     pub oid: i32,
 }
 
+#[derive(Debug)]
+pub enum Grouping {
+    Na,
+    NormalTpsl,
+    PositionTpsl,
+}
+
+#[derive(Debug)]
+pub struct Order {
+    pub asset: i32,
+    pub is_buy: bool,
+    pub limit_px: f64,
+    pub sz: f64,
+    pub reduce_only: bool,
+}
+
+#[derive(Debug)]
+pub struct OrderSpec {
+    pub order: Order,
+    pub order_type: OrderType,
+}
+
+#[derive(Debug)]
+pub struct OrderWire {
+    pub asset: i32,
+    pub is_buy: bool,
+    pub limit_px: String,
+    pub sz: String,
+    pub reduce_only: bool,
+    pub order_type: OrderTypeWire,
+}
