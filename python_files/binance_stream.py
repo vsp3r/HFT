@@ -13,9 +13,10 @@ async def connect_to_stream():
         symbol = 'ethusdt'
         level = 20
         speed = 0
-        # stream = "{}@depth{}@{}ms".format(symbol.lower(), level, speed)
+        stream = "{}@depth{}@{}ms".format(symbol.lower(), level, speed)
         s2 = "ethusdt@depth@100ms"
-        stream = [s2]
+        # stream = [s2]
+        stream = [stream]
 
         subscription_message = {
             "method": "SUBSCRIBE",
