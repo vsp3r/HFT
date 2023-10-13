@@ -1,3 +1,33 @@
 {
-    "max_pos":8993723
+    "Symbols":[
+        "GMT",
+        "ETH"
+    ],
+    
+    "Exchange": {
+        "HL_URL":"b",
+        "Bin_URL":"x",
+        "MakerFee":0.0002,
+        "TakerFee": 0.0025
+    },
+
+    "OrderParams": {
+        "ORDER_PAIRS": 6,
+        "START_SIZE": 100,
+        "STEP_SIZE": 100,
+        "SPREAD": 0.005,
+        "MIN_SPREAD": 0.01,
+        "MAINTAIN_SPREADS": "True",
+        "DEVIATION": 0.01
+    },
+
+    "Behavior":{
+        "CHECK_POS_LIMS": "True",
+        "MIN_POSITION": -10000,
+        "MAX_POSITION": 10000,
+        "POST_ONLY": "True",
+        "LOOP_INTERVAL": 5
+    },
+
+    "max_pos":3203948889997088
 }
