@@ -6,17 +6,20 @@ from os.path import getmtime
 import websockets
 import utils
 import threading
-import eth_account
-from eth_account.signers.local import LocalAccount
+# import eth_account
+# from eth_account.signers.local import LocalAccount
 
 CONFIG_FILE = 'config.json'
 
 class AutoTrader:
     def __init__(self, coin):
+        self.binance_book = {}
+        self.hyperliquid_book = {}
         self.coin = coin
+
         self.last_mtime = None
         self.load_config()
-        self.check_config()
+        # self.check_config()
 
     async def run(self):
         threading.Thread(target=self.check_for_config_updates, daemon=True).start()
@@ -47,8 +50,8 @@ class AutoTrader:
                 self.handle_binance(json.loads(message), m)
 
     async def hyperliquid_feed(self):
-        uri = "wss://api.hyperliquid.xyz/ws"  
-        # uri = 'wss://api.hyperliquid-testnet.xyz/ws'   
+        # uri = "wss://api.hyperliquid.xyz/ws"  
+        uri = 'wss://api.hyperliquid-testnet.xyz/ws'   
 
         async with websockets.connect(uri) as websocket:
             subscription_message = {
@@ -68,31 +71,40 @@ class AutoTrader:
                 self.handle_hyperliquid(json.loads(message), n)
 
     def handle_binance(self, message, msg_num):
-        self.binance_bbo['bid'] = float(message['b'][0][0])
-        self.binance_bbo['ask'] = float(message['a'][0][0])
-        self.binance_bbo['ts'] = int(message['E'])
-        print(f'Binance ({msg_num}): Bid: {self.binance_bbo["bid"]}, Ask: {self.binance_bbo["ask"]}')
+        self.binance_book['bid'] = float(message['b'][0][0])
+        self.binance_book['ask'] = float(message['a'][0][0])
+        self.binance_book['ts'] = int(message['E'])
+        print(f'Binance ({msg_num}): Bid: {self.binance_book["bid"]}, Ask: {self.binance_book["ask"]}')
+        # print(f'Binance ({msg_num}): {message}')
         self.compute_trades()
 
     def handle_hyperliquid(self, message, msg_num):
-        self.hyperliquid_bbo['bid'] = float(message['data']['levels'][0][0]['px'])
-        self.hyperliquid_bbo['ask'] = float(message['data']['levels'][1][0]['px'])
-        self.hyperliquid_bbo['ts'] = int(message['data']['time'])
-        print(f'Hyperliquid ({msg_num}): Bid: {self.hyperliquid_bbo["bid"]}, Ask: {self.hyperliquid_bbo["ask"]}')
+        self.hyperliquid_book['bid'] = float(message['data']['levels'][0][0]['px'])
+        self.hyperliquid_book['ask'] = float(message['data']['levels'][1][0]['px'])
+        self.hyperliquid_book['ts'] = int(message['data']['time'])
+        print(f'Hyperliquid ({msg_num}): Bid: {self.hyperliquid_book["bid"]}, Ask: {self.hyperliquid_book["ask"]}')
+        # print(f'hyperliquid({msg_num}): {message}')
 
 
     def compute_trades(self):
-        x = 0
+        # x = 0
+        print(f'Max_pos: {self.max_pos}')
 
+    # def load_config(self):
+    #     with open (CONFIG_FILE, 'r') as f:
+    #         f = json.load(f)
+    #         for key, value in f.items():
+    #             if isinstance(value, dict):
+    #                 for sub_key, sub_value in value.items():
+    #                     setattr(self, sub_key, sub_value)
+    #             else:
+    #                 setattr(self, key, value)
+    #         self.last_mtime = getmtime(CONFIG_FILE)
     def load_config(self):
-        with open (CONFIG_FILE, 'r') as f:
-            f = json.load(f)
-            for key, value in f.items():
-                if isinstance(value, dict):
-                    for sub_key, sub_value in value.items():
-                        setattr(self, sub_key, sub_value)
-                else:
-                    setattr(self, key, value)
+        with open(CONFIG_FILE, 'r') as f:
+            data = json.load(f)
+            self.max_pos = data['max_pos']
+            # ... load other parameters ...
             self.last_mtime = getmtime(CONFIG_FILE)
     
     def check_config(self):
@@ -111,9 +123,9 @@ def get_timestamp_ms() -> int:
     return int(time.time() * 1000)
 
 def main():
-    config = utils.get_config()
-    account = eth_account.Account.from_key(config["secret_key"])
-    print("Running with account address:", account.address)
+    # config = utils.get_config()
+    # account = eth_account.Account.from_key(config["secret_key"])
+    # print("Running with account address:", account.address)
     trader = AutoTrader('GMT')
     asyncio.run(trader.run())
 

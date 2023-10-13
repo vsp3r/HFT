@@ -29,7 +29,6 @@ class TradingBot:
             # time.sleep(5)
 
     async def handle_websocket_feed_1(self):
-        # Your first websocket handling logic goes here.
         while True:
             # e.g., async with websockets.connect('ws://example.com/feed1') as ws:
             #          data = await ws.recv()
@@ -37,7 +36,6 @@ class TradingBot:
             await asyncio.sleep(0)
 
     async def handle_websocket_feed_2(self):
-        # Your second websocket handling logic goes here.
         while True:
             # e.g., async with websockets.connect('ws://example.com/feed2') as ws:
             #          data = await ws.recv()
