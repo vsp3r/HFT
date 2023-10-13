@@ -42,7 +42,6 @@ COIN = 'GMT'
 def side_to_int(side: Side) -> int: #could perhaps replace with enums like order types in rtg
     return 1 if side == "A" else -1
 
-
 def side_to_uint(side: Side) -> int:
     return 1 if side == "A" else 0
 
